@@ -25,10 +25,10 @@ def main():
         seed_everything(config.training.seed, workers=True)
 
     datamodules = []
-    imagenet_datamodule = ImageDataModule(
-        **build_datamodule_kwargs(config.datasets.image, config.training)
-    )
     if "image" in config.datasets.selected:
+        imagenet_datamodule = ImageDataModule(
+            **build_datamodule_kwargs(config.datasets.image, config.training)
+        )
         datamodules.append(imagenet_datamodule)
 
     if "text" in config.datasets.selected:
