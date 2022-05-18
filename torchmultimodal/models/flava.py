@@ -17,15 +17,15 @@ from typing import Any, Callable, List, Literal, Optional, Tuple, Union
 
 import torch
 from packaging import version
-from torch import nn, Tensor, device
+from torch import device, nn, Tensor
 from torchmultimodal.modules.layers.mlp import MLP
 from torchmultimodal.modules.layers.normalizations import Fp32LayerNorm
 from torchmultimodal.modules.losses.flava import (
+    FLAVAPretrainingLoss,
     FLAVAPretrainingLossOutput,
     Pooler,
-    FLAVAPretrainingLoss,
 )
-from torchmultimodal.utils.common import PretrainedMixin, ModelOutput
+from torchmultimodal.utils.common import ModelOutput, PretrainedMixin
 
 
 EMBEDDING_OPTIONS = Literal["image", "text", "mm"]
@@ -1326,7 +1326,7 @@ class DalleConv2d(nn.Module):
         super().__init__()
 
         w = torch.empty((n_out, n_in, kw, kw), dtype=torch.float32)
-        w.normal_(std=1 / math.sqrt(n_in * kw ** 2))
+        w.normal_(std=1 / math.sqrt(n_in * kw**2))
 
         b = torch.zeros((n_out,), dtype=torch.float32)
         self.w, self.b = nn.Parameter(w), nn.Parameter(b)
@@ -1340,7 +1340,7 @@ class DalleEncoderBlock(nn.Module):
     def __init__(self, n_in: int, n_out: int, n_layers: int):
         super().__init__()
         n_hid = n_out // 4
-        self.post_gain = 1 / (n_layers ** 2)
+        self.post_gain = 1 / (n_layers**2)
 
         self.id_path = DalleConv2d(n_in, n_out, 1) if n_in != n_out else nn.Identity()
         self.res_path = nn.Sequential(
